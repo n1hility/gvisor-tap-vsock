@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/apparentlymart/go-cidr v1.1.0
+	github.com/containers/storage v1.36.0
 	github.com/coreos/stream-metadata-go v0.1.3
 	github.com/dustin/go-humanize v1.0.0
 	github.com/google/gopacket v1.1.19
@@ -24,7 +25,6 @@ require (
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

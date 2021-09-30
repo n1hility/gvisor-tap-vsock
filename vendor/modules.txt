@@ -1,6 +1,14 @@
 # github.com/apparentlymart/go-cidr v1.1.0
 ## explicit
 github.com/apparentlymart/go-cidr/cidr
+# github.com/containers/storage v1.36.0
+## explicit
+github.com/containers/storage/pkg/homedir
+github.com/containers/storage/pkg/idtools
+github.com/containers/storage/pkg/mount
+github.com/containers/storage/pkg/reexec
+github.com/containers/storage/pkg/system
+github.com/containers/storage/pkg/unshare
 # github.com/coreos/stream-metadata-go v0.1.3
 ## explicit
 github.com/coreos/stream-metadata-go/fedoracoreos
@@ -9,6 +17,8 @@ github.com/coreos/stream-metadata-go/stream
 github.com/coreos/stream-metadata-go/stream/rhcos
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/docker/go-units v0.4.0
+github.com/docker/go-units
 # github.com/dustin/go-humanize v1.0.0
 ## explicit
 github.com/dustin/go-humanize
@@ -41,6 +51,8 @@ github.com/mdlayher/vsock
 # github.com/miekg/dns v1.1.43
 ## explicit
 github.com/miekg/dns
+# github.com/moby/sys/mountinfo v0.4.1
+github.com/moby/sys/mountinfo
 # github.com/nxadm/tail v1.4.8
 github.com/nxadm/tail
 github.com/nxadm/tail/ratelimiter
@@ -83,6 +95,10 @@ github.com/onsi/gomega/types
 # github.com/opencontainers/go-digest v1.0.0
 ## explicit
 github.com/opencontainers/go-digest
+# github.com/opencontainers/runc v1.0.2
+github.com/opencontainers/runc/libcontainer/user
+# github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
+github.com/opencontainers/runtime-spec/specs-go
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -100,6 +116,8 @@ github.com/songgao/water
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+# github.com/syndtr/gocapability v0.0.0-20200815063812-42c35b437635
+github.com/syndtr/gocapability/capability
 # github.com/u-root/uio v0.0.0-20210528114334-82958018845c
 github.com/u-root/uio/rand
 github.com/u-root/uio/ubinary
@@ -122,6 +140,7 @@ golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
+golang.org/x/crypto/ssh/knownhosts
 # golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d
 ## explicit
 golang.org/x/net/bpf
@@ -135,8 +154,7 @@ golang.org/x/net/ipv6
 # golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 ## explicit
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e
-## explicit
+# golang.org/x/sys v0.0.0-20210820121016-41cdb8703e55
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
