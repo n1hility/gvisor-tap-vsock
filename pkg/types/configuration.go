@@ -49,6 +49,9 @@ type Configuration struct {
 	// Qemu protocol is 32bits big endian size of the packet, then the packet.
 	// Hyperkit protocol is handshake, then 16bits little endian size of packet, then the packet.
 	Protocol Protocol
+
+	// Address and port for ssh on virtual machine
+	SSHHostPort string
 }
 
 type Protocol string
