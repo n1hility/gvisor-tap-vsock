@@ -9,11 +9,11 @@ TOOLS_DIR := tools
 include tools/tools.mk
 
 VERSION_LDFLAGS=-X github.com/containers/gvisor-tap-vsock/pkg/types.gitVersion=$(GIT_VERSION)
-LDFLAGS = -s -w $(VERSION_LDFLAGS)
+LDFLAGS = $(VERSION_LDFLAGS)
 
 .PHONY: gvproxy
 gvproxy:
-	go build -ldflags "$(LDFLAGS)" -o bin/gvproxy ./cmd/gvproxy
+	go build -gcflags="-N -l" -ldflags "$(LDFLAGS)" -o bin/gvproxy ./cmd/gvproxy
 
 .PHONY: qemu-wrapper
 qemu-wrapper:

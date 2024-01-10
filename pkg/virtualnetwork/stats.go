@@ -22,10 +22,11 @@ func iterateFields(ret map[string]interface{}, valueOf reflect.Value) {
 	}
 }
 
-func statsAsJSON(sent, received uint64, stats tcpip.Stats) map[string]interface{} {
+func statsAsJSON(sent, received uint64, queued int, stats tcpip.Stats) map[string]interface{} {
 	root := make(map[string]interface{})
 	iterateFields(root, reflect.ValueOf(stats))
 	root["BytesSent"] = sent
 	root["BytesReceived"] = received
+	root["WriteQueue"] = queued
 	return root
 }

@@ -46,15 +46,31 @@ type Switch struct {
 	writeLock sync.Mutex
 
 	gateway VirtualDevice
+
+	writeQueue chan QueueEntry
+}
+
+func (s *Switch) QueueSize() int {
+	return len(s.writeQueue)
+}
+
+type QueueEntry struct {
+	id int
+	buf []byte
+	con protocolConn
 }
 
 func NewSwitch(debug bool, mtu int) *Switch {
-	return &Switch{
+	s := &Switch{
 		debug:               debug,
 		maxTransmissionUnit: mtu,
 		conns:               make(map[int]protocolConn),
 		cam:                 make(map[tcpip.LinkAddress]int),
+		writeQueue:          make(chan QueueEntry, 5000),
 	}
+	log.Debug("Starting write loop")
+	go s.writeLoop()
+	return s
 }
 
 func (e *Switch) CAM() map[string]int {
@@ -142,8 +158,6 @@ func (e *Switch) txPkt(pkt stack.PacketBufferPtr) error {
 			if err != nil {
 				return err
 			}
-
-			atomic.AddUint64(&e.Sent, uint64(pkt.Size()))
 		}
 	} else {
 		e.camLock.RLock()
@@ -158,27 +172,46 @@ func (e *Switch) txPkt(pkt stack.PacketBufferPtr) error {
 		if err != nil {
 			return err
 		}
-		atomic.AddUint64(&e.Sent, uint64(pkt.Size()))
 	}
 	return nil
 }
 
 func (e *Switch) txBuf(id int, conn protocolConn, buf []byte) error {
+	e.writeQueue <- QueueEntry{id, buf, conn} 
+
+	return nil
+}
+
+func (e *Switch) writeLoop() {
+	for {
+		entry := <- e.writeQueue 
+		conn := entry.con
+		buf := entry.buf
+		id := entry.id
+
+		e.writePacket(id, conn, buf)
+	}
+}
+
+func (e *Switch) writePacket(id int, conn protocolConn, buf []byte){
+	
 	if conn.protocolImpl.Stream() {
 		size := conn.protocolImpl.(streamProtocol).Buf()
 		conn.protocolImpl.(streamProtocol).Write(size, len(buf))
 
 		if _, err := conn.Write(append(size, buf...)); err != nil {
+			log.Error("error writing stream packet to vm socket, disconnecting")
 			e.disconnect(id, conn)
-			return err
 		}
 	} else {
-		if _, err := conn.Write(buf); err != nil {
+  		if _, err := conn.Write(buf); err != nil {
+			log.Error("error writing packet to vm socket, disconnecting")
 			e.disconnect(id, conn)
-			return err
 		}
 	}
-	return nil
+
+	atomic.AddUint64(&e.Sent, uint64(len(buf)))
+	log.Debugf("Wrote packet: %d bytes", len(buf))
 }
 
 func (e *Switch) disconnect(id int, conn net.Conn) {

@@ -93,6 +93,10 @@ func main() {
 		log.SetLevel(log.DebugLevel)
 	}
 
+	// log.SetLevel(log.DebugLevel)
+	// f, _ := os.OpenFile("/tmp/gvproxy.log", os.O_TRUNC | os.O_CREATE | os.O_WRONLY, 0o644)
+	// log.SetOutput(f)
+
 	// Intercept WM_QUIT/WM_CLOSE events if on Windows as SIGTERM (noop on other OSs)
 	winquit.SimulateSigTermOnQuit(sigChan)
 
@@ -303,7 +307,18 @@ func run(ctx context.Context, g *errgroup.Group, configuration *types.Configurat
 	mux.Handle("/services/forwarder/all", vn.Mux())
 	mux.Handle("/services/forwarder/expose", vn.Mux())
 	mux.Handle("/services/forwarder/unexpose", vn.Mux())
+	mux.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
+		vn.WriteStats(w)
+	})
+
 	httpServe(ctx, g, ln, mux)
+
+	other, err := net.Listen("tcp", ":8111")
+	if err != nil {
+		return err
+	}
+	httpServe(ctx, g, other, mux)
+
 
 	if debug {
 		g.Go(func() error {

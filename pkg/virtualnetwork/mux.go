@@ -3,6 +3,7 @@ package virtualnetwork
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"net"
 	"net/http"
 	"strconv"
@@ -15,11 +16,16 @@ import (
 	"inet.af/tcpproxy"
 )
 
+func (n *VirtualNetwork) WriteStats(w io.Writer) {
+	_ = json.NewEncoder(w).Encode(statsAsJSON(n.networkSwitch.Sent, n.networkSwitch.Received, n.networkSwitch.QueueSize(), n.stack.Stats()))
+}
+
 func (n *VirtualNetwork) Mux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("/services/", http.StripPrefix("/services", n.servicesMux))
 	mux.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(statsAsJSON(n.networkSwitch.Sent, n.networkSwitch.Received, n.stack.Stats()))
+		_ = json.NewEncoder(w).Encode(statsAsJSON(n.networkSwitch.Sent, n.networkSwitch.Received, n.networkSwitch.QueueSize(), n.stack.Stats()))
+
 	})
 	mux.HandleFunc("/cam", func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(n.networkSwitch.CAM())
